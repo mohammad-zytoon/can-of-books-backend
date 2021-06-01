@@ -1,3 +1,4 @@
+
 const express=require('express');
 const cors = require('cors');
 require('dotenv').config;
@@ -5,6 +6,7 @@ const mongoose= require( "mongoose");
 
 const server=express();
 server.use(cors());
+server.use(express.json())
 const PORT=3001
 
 mongoose.connect('mongodb://localhost:27017/book', {useNewUrlParser: true, useUnifiedTopology: true});
@@ -85,6 +87,54 @@ function getBooks(request,response){
         }
     })
 }
+// lab-013 post for adding books to the database 
+
+server.post('/addBook',addBook);
+function addBook(req,res){
+    console.log(req.body);
+   const {email,ImageURL, bookName, description}=req.body;
+   myUserModel.find({email:email},(error,result)=>{
+       if (error){
+           console.log('There is an error')
+       }else{
+
+        result[0].books.push(
+            {
+            bookName:bookName,
+            description:description,
+            img:ImageURL,
+            }
+        )
+        result[0].save();
+
+        res.send(result[0].books)
+
+       }
+   })
+
+}
+// delete book resourse 
+server.delete('/deleteBook',deleteData)
+function deleteData(req,res){
+    // let index=Number(req.params.index);
+    let {email,index}=req.query
+    myUserModel.find({email:email},(error,result)=>{
+        if (error){
+            console.log('ther is error')
+        }else{
+            const modelAfterDelete=result[0].books.filter((book,id)=> {
+                if(id !=index){
+                    return book
+                }
+            })
+            result[0].books=modelAfterDelete;
+            result[0].save();
+            res.send(result[0].books);
+        }
+    })
+}  
+
+// test 
 server.get('/test',(req,res)=>{
     res.send('This is a test route');
     
@@ -94,6 +144,7 @@ server.listen(PORT,()=>{
     console.log('The PORT is active')
 
 })
+
 
 
 /*
