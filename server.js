@@ -9,8 +9,8 @@ server.use(cors());
 server.use(express.json())
 const PORT=process.env.PORT;
 
-// mongoose.connect(`${process.env.MONGODB_URI}`, {useNewUrlParser: true, useUnifiedTopology: true});
-mongoose.connect('mongodb://localhost:27017/book', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(`mongodb://mohammadfirstdatabase:1q2w3e4r5t6y@lab14data-shard-00-00.tsd53.mongodb.net:27017,lab14data-shard-00-01.tsd53.mongodb.net:27017,lab14data-shard-00-02.tsd53.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-lrg6jv-shard-0&authSource=admin&retryWrites=true&w=majority`, {useNewUrlParser: true, useUnifiedTopology: true});
+// mongoose.connect('mongodb://localhost:27017/book', {useNewUrlParser: true, useUnifiedTopology: true});
 
 const BookSchema  = new mongoose.Schema({
     bookName:String,
