@@ -7,9 +7,10 @@ const mongoose= require( "mongoose");
 const server=express();
 server.use(cors());
 server.use(express.json())
-const PORT=3001
+const PORT=process.env.PORT;
 
-mongoose.connect('mongodb://localhost:27017/book', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(`mongodb://mohammadfirstdatabase:1q2w3e4r5t6y@lab14data-shard-00-00.tsd53.mongodb.net:27017,lab14data-shard-00-01.tsd53.mongodb.net:27017,lab14data-shard-00-02.tsd53.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-lrg6jv-shard-0&authSource=admin&retryWrites=true&w=majority`, {useNewUrlParser: true, useUnifiedTopology: true});
+// mongoose.connect('mongodb://localhost:27017/book', {useNewUrlParser: true, useUnifiedTopology: true});
 
 const BookSchema  = new mongoose.Schema({
     bookName:String,
@@ -134,6 +135,29 @@ function deleteData(req,res){
     })
 }  
 
+// update value 
+
+server.put('/updateBook/:index',updateData)
+function updateData(req,res){
+    const index=req.params.index;
+    const{ email, imageURL,bookName,description}=req.body;
+    myUserModel.find({email:email},(error,result)=>{
+        if( error){
+            console.log('there is an erro')
+        }else{
+            result[0].books.splice(index,1,{
+                bookName:bookName,
+                description:description,
+                img:imageURL
+            })
+            console.log(result[0].books)
+            result[0].save();
+            res.send(result[0].books);
+        }
+    })
+}
+
+
 // test 
 server.get('/test',(req,res)=>{
     res.send('This is a test route');
@@ -155,3 +179,6 @@ sudo apt-get install
 mongod
 mongo 
 */
+
+
+
